@@ -1,4 +1,4 @@
-function match(...)
+function match(...)--first argument is the case to deal with other arguments are a table with a case and an associated function
     local done = false
     local defFn = function()end
     for k,v in pairs(arg) do
@@ -14,4 +14,11 @@ function match(...)
         if not done then defFn() end
     end
 end
+--[[ EXEMPLE USE:
+    match(condition,
+        {someCondition,function()},
+        {otherCondition,function()},
+        {"default",function()}
+    )
+--]]
 return match
