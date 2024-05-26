@@ -1,9 +1,9 @@
-OOB = require "OOB"
+OOB = require "utils/OOB"
 
 Class = OOB.Class
 Object = OOB.Object
 
-ARRAY = Class({
+ARRAY = Class({--creates an ARRAY Class with some basic functions
     self = {},
     append = function(self,val)
         table.insert(self.self,1,val)
@@ -41,7 +41,10 @@ ARRAY = Class({
         return reduced
     end
 })
-
-return function(args)
+--[[EXEMPLE USE:
+    myARRAY = require("utils/OOB")({self = {1,2,3,4,5}})
+    myARRAY.map(function(v) return v*2 end) changes myARRAY.self to {2,4,6,8,10}
+--]]
+return function(args)--returns a function to create an ARRAY Object
     return Object(ARRAY,args)
 end
