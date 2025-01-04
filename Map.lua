@@ -1,4 +1,4 @@
-local Entry = require "lua/Entry"
+local Entry = require "Entry"
 local Map = {
     values = {}
 }
