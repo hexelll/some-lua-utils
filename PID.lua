@@ -1,4 +1,4 @@
-local Vec = require "lua/Vec"
+local Vec = require "Vec"
 local function clamp(min,v,max)
     return math.max(min,math.min(v,max))
 end
