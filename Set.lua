@@ -1,4 +1,4 @@
-local Vec = require "lua/Vec"
+local Vec = require "Vec"
 local Set = {
     values = {}
 }
