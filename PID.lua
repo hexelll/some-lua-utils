@@ -1,7 +1,4 @@
-local Vec = require "Vec"
-local function clamp(min,v,max)
-    return math.max(min,math.min(v,max))
-end
+local Mat = require "lua/Mat"
 local PID = {
     kp=0,
     ki=0,
@@ -29,23 +26,20 @@ function PID.new(settings)
     })
     return o
 end
-function PID:run(target,t)
+function PID:run(target)
     local X = self:get()
-    self.last[1] = self.last[1] or X
-    self.last[2] = self.last[2] or self.last[1]
+    self.last[1] = self.last[1] or type(target=="table") and X:copy() or X
     local e = target-X
-    print(e)
-    self.lastT = self.lastT or t
-    local dt = (t-self.lastT)/self.sampleRate
-    self.compound =  self.compound + e*dt
+    if type(target) == "table" and type(self.compound) == "number" then
+        self.compound = Mat.zeros(target.rows,target.cols)
+    end
+    self.compound = self.compound + e
     local P = e*self.kp
-    local I = self.compound*self.ki*dt
-    local D = -self.kd*((X-2*self.last[1]+self.last[2])/dt)
-    local command = math.ceil(clamp(self.clamps[1],P+I+D,self.clamps[2])/(self.step))*self.step
+    local I = self.compound*self.ki
+    local D = (self.last[1]-X)*(self.kd)
+    local command = P+I+D
     self:set(command)
-    self.lastT = t
-    self.last[2] = self.last[1]
-    self.last[1] = X
+    self.last[1] = X:copy()
     return command
 end
 
