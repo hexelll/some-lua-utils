@@ -48,7 +48,7 @@ end
 function Map:tostring()
     local str="<"
     for k,v in self:iter() do
-        v = type(k)=="table" and v:tostring() or v
+        v = (type(v)=="table" and v.tostring) and v:tostring() or type(v)=="table" and textutils.serialise(v) or v
         str = str.."("..k..","..v..")"
     end
     return str..">"

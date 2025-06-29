@@ -143,7 +143,89 @@ function Mat:map(fn)
     return newMat
 end
 function Mat:copy()
-    return Mat.from(self.data)
+    local data = {}
+    for i=1,self.rows do
+        data[i] = {}
+        for j=1,self.cols do
+            data[i][j] = self.data[i][j]
+        end
+    end
+    return Mat.from(data)
+end
+
+function Mat:trace()
+    local trace = 1
+    for i=1,self.cols do
+        trace = trace * self.data[i][i]
+    end
+    return trace
+end
+
+function Mat:line_swap(l1,l2)
+    self.data[l1],self.data[l2] = self.data[l2],self.data[l1]
+    return self
+end
+function Mat:line_mul(l,k)
+    for i = 1,self.cols do
+        self.data[l][i] = self.data[l][i]*k  
+    end
+    return self
+end
+function Mat:line_add(l1,l2,k)
+    for i = 1,self.cols do
+        self.data[l1][i] = self.data[l1][i]+self.data[l2][i]*k  
+    end
+    return self
+end
+function Mat:gauss(b)
+    local A = self:copy()
+    local B = b:copy()
+    local n = A.cols
+    for k=1,n do
+        local imax = k
+        local vmax = math.abs(A.data[imax][k])
+        for i=k+1,n do
+            if math.abs(A.data[i][k]) > vmax then
+                vmax = A.data[i][k]
+                imax = i
+            end
+        end
+        if imax ~= k then
+            A:line_swap(k,imax)
+            B:line_swap(k,imax)
+        end
+    end
+    for i=1,n+1 do
+        for j=2,n do
+            if i<j then
+                local k = -A.data[j][i]/A.data[i][i]
+                A:line_add(j,i,k)
+                B:line_add(j,i,k)
+            end
+        end
+    end
+    local det = A:trace()
+    if math.abs(det) < 0.0001 then
+        error("matrix not inversible")
+    end
+    for i=1,n do
+        local k = 1/A.data[i][i]
+        A:line_mul(i,k)
+        B:line_mul(i,k)
+    end
+    for i=1,n do
+        for j=1,i-1 do
+            local k = -A.data[j][i]
+            A:line_add(j,i,k)
+            B:line_add(j,i,k)
+        end
+    end
+    return B
+end
+function Mat:inverse()
+    local A = self:copy()
+    local B = Mat.identity(A.cols)
+    return A:gauss(B)
 end
 
 return Mat

@@ -8,9 +8,6 @@ function utils.Class(table,name)
             setmetatable(o,{
                 __index = function(_,i)
                     return table[i]
-                end,
-                __tostring = function()
-                    return '('..o.x..','..o.y..','..o.z..')'
                 end
             })
             return o
@@ -40,10 +37,10 @@ end
 function utils.angleDiff(a,b)
     local d = {}
     d[1] = b-a
-    d[2] = b-a+math.pi
-    d[3] = b-a+2*math.pi
-    d[4] = b-a-math.pi
-    d[5] = b-a-2*math.pi
+    d[2] = b-a+180
+    d[3] = b-a+360
+    d[4] = b-a-180
+    d[5] = b-a-360
     return utils.amin(d)
 end
 

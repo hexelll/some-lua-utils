@@ -34,6 +34,7 @@ local Vec = {
         return self
     end,
     sort = function(self)
+        local newVec = self:copy()
         local function partition(v,lo,hi)
             local pivot = v:get(hi)
             local i = lo
@@ -54,7 +55,7 @@ local Vec = {
             quicksort(v,lo,p-1)
             quicksort(v,p+1,hi)
         end
-        quicksort(self,1,self:len())
+        quicksort(newVec,1,newVec:len())
         return self
     end
 }
@@ -74,7 +75,7 @@ end
 function Vec:tostring()
     local str = "<"
     for k,v in self:iter() do
-        str = type(v)=="table" and str..v:tostring() or str..v
+        str = (type(v)=="table" and v.tostring) and str..v or type(v)=="table" and str..textutils.serialise(v) or str..v
         if not (k == self:len()) then
             str = str..","
         end
@@ -116,6 +117,9 @@ function Vec:append(arr)
         self:push(v)
     end
     return self
+end
+function Vec:last()
+    return self:get(self:len())
 end
 function Vec:insert(k,v)
     v = (type(v) == "table") and v or Vec.new{v}
