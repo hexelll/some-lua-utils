@@ -33,3 +33,6 @@ local function downloadRepo(path,url,tab)
         end
     end
 end
+
+local args = {...}
+downloadRepo(args[1],githubUrl(args[2],args[3],args[4]))
