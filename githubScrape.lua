@@ -1,5 +1,5 @@
 local function githubUrl(username,repo,path)
-    return "https://api.github.com/repos/"..username.."/"..repo.."/"..path
+    return "https://api.github.com/repos/"..username.."/"..repo.."/contents/"..path
 end
 
 local function getUnwrappedResponse(url)
