@@ -7,7 +7,7 @@ local function getUnwrappedResponse(url)
     if not response[1] then
         error(response[2])
     end
-    return textutils.unserializeJSON(response[1].readAll())
+    return response[1].readAll()
 end
 
 local function ptabs(n)
@@ -20,7 +20,7 @@ end
 
 local function downloadRepo(path,url,tab)
     tab = tab or 0
-    local response = getUnwrappedResponse(url)
+    local response = textutils.unserializeJSON(getUnwrappedResponse(url))
     for _,p in pairs(response) do
         term.write(ptabs(tab))
         print(p.path)
